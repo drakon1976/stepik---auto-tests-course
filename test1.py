@@ -1,31 +1,34 @@
-import math
+s = 'My Name is Julia'
+
+if 'Name' in s:
+    print('Substring found in', s)
+
+index = s.find('Name')
+if index != -1:
+    print(f'Substring found at index {index}')
+    
+import pytest
 
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 
 
-def calc(x):
-    return str(math.log(abs(12 * math.sin(int(x)))))
+def test_exception1():
+    try:
+        browser = webdriver.Chrome()
+        browser.get("http://selenium1py.pythonanywhere.com/")
+        with pytest.raises(NoSuchElementException):
+            browser.find_element_by_css_selector("button.btn")
+            pytest.fail("Не должно быть кнопки Отправить")
+    finally: 
+        browser.quit()
 
-
-def print_answer(remote: webdriver.Remote):
-    alert = remote.switch_to.alert
-    print(alert.text.split()[-1])
-    alert.accept()
-
-
-browser = webdriver.Chrome()
-link = "http://suninjuly.github.io/get_attribute.html"
-browser.get(link)
-
-try:
-    x_element = browser.find_element_by_id("treasure").get_attribute("valuex")
-    browser.find_element_by_id("answer").send_keys(calc(x_element))
-    elements_to_select = tuple(("[id = 'robotCheckbox']", "[id='robotsRule']", "button.btn.btn-default"))
-    print(x_element)
-
-    for elem in elements_to_select:
-        browser.find_element_by_css_selector(elem).click()
-
-    print_answer(browser)
-finally:
-    browser.quit()
+def test_exception2():
+    try:
+        browser = webdriver.Chrome()
+        browser.get("http://selenium1py.pythonanywhere.com/")
+        with pytest.raises(NoSuchElementException):
+            browser.find_element_by_css_selector("no_such_button.btn")
+            pytest.fail("Не должно быть кнопки Отправить")
+    finally: 
+        browser.quit()
